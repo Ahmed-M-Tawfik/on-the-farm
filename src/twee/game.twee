@@ -1,0 +1,44 @@
+:: Start
+<<nobr>>
+<div id="start">
+  <h1>On the Farm</h1>
+  <div id="setting-image">
+    /* <img src='assets/swing.png' alt='Swing in foreground with fantastical scenery in the background'> */
+  </div>
+  <p>You've just acquired this empty land before you. It's up to you to transform it into a thriving farm.</p>
+  <<button "Get started!">>
+    <<goto "Farm">>
+  <</button>>
+
+  /* SETUP */
+  /* resources */
+  <<set $money = 100>>
+  <<set $workers = 0>>
+
+  /* farm objects */
+  <<set $farmBuildings = []>>
+  <<set $farmPlots = Array.from({length: 9}, () => ({
+    status: "wild"
+  }))>>
+</div>
+<</nobr>>
+
+:: Farm
+<<nobr>>
+  <h1>On the Farm</h1>
+  <div id="header">
+    <<resourceBar>>
+  </div>
+  /* <div id="setting-image"/> */
+  <<displayFarmMapSketch>>
+  <div id="context">
+    <p>You stand in the middle of your <<farmDescShort>>. The sun is shining, and the birds are singing. What would you like to do?</p>
+  </div>
+  <div id="actions">
+    ''Money:'' <<do>>$money<</do>><br />
+<<link "Update money display">>
+	<<set $money += 10>>
+	<<redo>>
+<</link>>
+  </div>
+<</nobr>>

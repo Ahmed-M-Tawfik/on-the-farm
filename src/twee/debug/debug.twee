@@ -1,0 +1,18 @@
+:: Widgets - 000 Debug [widget]
+<<nobr>>
+/* Load Debug passage first */
+<<script>>
+  console.log("debug widgets loading");
+<</script>>
+<<set $debug = $debug || {}>>
+<<set $debug.logs = $debug.logs || []>>
+<<widget "debug_infoLog">>
+  <<run $debug.logs.push(`[${new Date().toISOString()}]:: ${_args[0]}`)>>
+<</widget>>
+<<widget "debug_errorLog">>
+  <<run $debug.logs.push(`[${new Date().toISOString()}]:: ⚠️ ${_args[0]}`)>>
+<</widget>>
+<<script>>
+  console.log("debug widgets loaded");
+<</script>>
+<</nobr>>

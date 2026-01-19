@@ -1,0 +1,17 @@
+:: Widgets - Content [widget]
+<<nobr>>
+<<debug_infoLog "content widgets loading">>
+<<widget "farmDescShort">>
+  <<if $farmBuildings.length == 0 && $farmPlots.every(plot => plot.status === "wild")>>\
+    empty land\
+  <<elseif $farmBuildings.includes("house") && \
+    ($farmBuildings.length > 1 || $farmPlots.some(plot => plot.status !== "wild"))>>\
+    thriving farm\
+  <<elseif $farmBuildings.includes("house")>>\
+    home\
+  <<else>>\
+    humble farm\
+  <</if>>\
+<</widget>>
+<<debug_infoLog "content widgets loaded">>
+<</nobr>>

@@ -1,0 +1,63 @@
+:: Widgets - Map [widget]
+<<nobr>>
+<<debug_infoLog "map widgets loading">>
+<<widget "displayFarmMapSketch">>
+<<set _map = "">>
+<<set _plotChars = {
+  wild: "🌾",
+  planted: "🌱",
+  growing: "🌿",
+  mature: "🌻"
+}>>
+
+/* Build the map */
+<<set _map += "🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱💧💧💧\n">>
+
+/* Render 3 rows of plots */
+<<for _row = 0; _row < 3; _row++>>
+  /* Render 10 lines for this row of plots */
+  <<for _line = 0; _line < 10; _line++>>
+    <<set _rowText = "🧱">>
+    /* Render 3 columns */
+    <<for _col = 0; _col < 3; _col++>>
+      <<set _plotIdx = _row * 3 + _col>>
+      <<set _plot = $farmPlots[_plotIdx]>>
+      <<set _char = _plotChars[_plot.status] || "·">>
+      <<set _hasBuilding = _plot.building !== undefined>>
+      /* Render this plot's line */
+      <<for _j = 0; _j < 10; _j++>>
+        <<if _hasBuilding && _line >= 3 && _line <= 6 && _j >= 3 && _j <= 6>>
+          /* Building in center (4x4 area) */
+          <<if _line === 3 || _line === 6>>
+            <<set _rowText += "🧱">>
+          <<else>>
+            <<if _j === 3 || _j === 6>>
+              <<set _rowText += "🧱">>
+            <<else>>
+              <<set _rowText += "🏠">>
+            <</if>>
+          <</if>>
+        <<else>>
+          <<set _rowText += _char>>
+        <</if>>
+      <</for>>
+      <<set _rowText += "🧱">>
+    <</for>>
+    /* Add canal on the right for all rows */
+    <<set _rowText += "💧💧💧">>
+
+    <<set _map += _rowText + "\n">>
+  <</for>>
+  /* Add divider or bottom border */
+  <<set _map += "🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱💧💧💧\n">>
+<</for>>
+
+/* Add road at the bottom */
+<<set _map += "➡️➡️➡️➡️➡️➡️➡️➡️➡️➡️➡️➡️➡️➡️➡️➡️➡️➡️➡️➡️➡️➡️➡️➡️➡️➡️➡️➡️➡️➡️➡️➡️➡️➡️➡️➡️➡️\n">>
+<<set _map += "⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️\n">>
+
+/* Display the map in a monospace font */
+<pre style="line-height: 1.2; font-size: 14px; font-family: 'Noto Sans Mono', monospace;">_map</pre>
+<</widget>>
+<<debug_infoLog "map widgets loaded">>
+<</nobr>>

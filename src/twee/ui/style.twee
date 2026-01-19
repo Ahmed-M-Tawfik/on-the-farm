@@ -1,0 +1,8 @@
+:: Widgets - Style [widget]
+<<nobr>>
+<<debug_infoLog "style widgets loading">>
+<<widget "resourceBar">>
+  <span>''Money'' <<do tag "money">>$money<</do>></span> | <span>''Workers'' <<do tag "workers">>$workers<</do>></span>
+<</widget>>
+<<debug_infoLog "style widgets loaded">>
+<</nobr>>

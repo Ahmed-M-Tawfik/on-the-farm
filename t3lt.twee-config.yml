@@ -1,0 +1,12 @@
+sugarcube-2:
+  macros:
+    farmDescShort:
+      name: farmDescShort
+    resourceBar:
+      name: resourceBar
+    debug_infoLog:
+      name: debug_infoLog
+    debug_errorLog:
+      name: debug_errorLog
+    displayFarmMapSketch:
+      name: displayFarmMapSketch
