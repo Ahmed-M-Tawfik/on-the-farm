@@ -10,3 +10,5 @@ sugarcube-2:
       name: debug_errorLog
     displayFarmMapSketch:
       name: displayFarmMapSketch
+    farm_optionToBuildHouse:
+      name: farm_optionToBuildHouse

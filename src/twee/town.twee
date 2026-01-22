@@ -1,0 +1,40 @@
+:: Town
+<<nobr>>
+  <h1>In the Town</h1>
+  <div id="header">
+    <<resourceBar>>
+  </div>
+  /* <div id="setting-image"/> */
+  <div id="context">
+    <p>You're in the local town. There's hustle and bustle as people go about their day. What would you like to do?</p>
+  </div>
+  <div id="actions">
+    <<link "Look for workers to hire" "Town Hire Workers">><</link>><br />
+    <<link "Go back to the farm" "Farm">><</link>><br />
+  </div>
+<</nobr>>
+
+:: Town Hire Workers
+<<nobr>>
+  <h1>Hiring Workers</h1>
+  <div id="header">
+    <<resourceBar>>
+  </div>
+  /* <div id="setting-image"/> */
+  <div id="context">
+    <p>You approach a group of townsfolk looking for work.</p>
+  </div>
+  <div id="actions">
+    <<if $money >= 20>>
+      <<link "Hire a worker ($20)" "Town Hire Workers">>
+        <<set $money -= 20>>
+        <<set $workers += 1>>
+      <</link>><br />
+
+      <<link "Back to town" "Town">><</link>>
+    <<else>>
+      <p>You don't have enough money to hire a worker.</p>
+      <<link "Return to town" "Town">><</link>>
+    <</if>>
+  </div>
+<</nobr>>

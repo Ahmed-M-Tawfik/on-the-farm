@@ -104,7 +104,7 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
 		<div id="init-lacking"><p>Browser lacks capabilities required to play.</p><p>Upgrade or switch to another browser.</p></div>
 		<div id="init-loading"><div>Loading&hellip;</div></div>
 	</div>
-	<!-- UUID://3343DA80-8D0C-4485-8292-8C41EBB11ADB// --><tw-storydata name="On the Farm" startnode="2" creator="Tweego" creator-version="2.1.1" ifid="3343DA80-8D0C-4485-8292-8C41EBB11ADB" zoom="1" format="SugarCube" format-version="2.37.3" options="" hidden><style role="stylesheet" id="twine-user-stylesheet" type="text/twine-css">#setting-image img {
+	<!-- UUID://3343DA80-8D0C-4485-8292-8C41EBB11ADB// --><tw-storydata name="On the Farm" startnode="3" creator="Tweego" creator-version="2.1.1" ifid="3343DA80-8D0C-4485-8292-8C41EBB11ADB" zoom="1" format="SugarCube" format-version="2.37.3" options="" hidden><style role="stylesheet" id="twine-user-stylesheet" type="text/twine-css">#setting-image img {
   width: 100%;
   min-width: 300px;
   max-width: 800px;
@@ -135,7 +135,27 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
 &lt;&lt;script&gt;&gt;
   console.log(&quot;debug widgets loaded&quot;);
 &lt;&lt;/script&gt;&gt;
-&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="2" name="Start" tags="" position="225,100" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="2" name="Farm" tags="" position="225,100" size="100,100">&lt;&lt;nobr&gt;&gt;
+  &lt;h1&gt;On the Farm&lt;/h1&gt;
+  &lt;div id=&quot;header&quot;&gt;
+    &lt;&lt;resourceBar&gt;&gt;
+  &lt;/div&gt;
+  /* &lt;div id=&quot;setting-image&quot;/&gt; */
+  &lt;&lt;displayFarmMapSketch&gt;&gt;
+  &lt;div id=&quot;context&quot;&gt;
+    &lt;p&gt;You stand in the middle of your &lt;&lt;farmDescShort&gt;&gt;. The sun is shining, and the birds are singing. What would you like to do?&lt;/p&gt;
+  &lt;/div&gt;
+  &lt;div id=&quot;actions&quot;&gt;
+    &#39;&#39;Money:&#39;&#39; &lt;&lt;do&gt;&gt;$money&lt;&lt;/do&gt;&gt;&lt;br /&gt;
+    &lt;&lt;link &quot;DEBUG: Get more money (+$10)&quot; &quot;Farm&quot;&gt;&gt;
+      &lt;&lt;set $money += 10&gt;&gt;
+    &lt;&lt;/link&gt;&gt;&lt;br /&gt;
+
+    &lt;&lt;farm_optionToBuildHouse&gt;&gt;
+
+    &lt;&lt;link &quot;Go to town&quot; &quot;Town&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;br /&gt;
+  &lt;/div&gt;
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="3" name="Start" tags="" position="350,100" size="100,100">&lt;&lt;nobr&gt;&gt;
 &lt;div id=&quot;start&quot;&gt;
   &lt;h1&gt;On the Farm&lt;/h1&gt;
   &lt;div id=&quot;setting-image&quot;&gt;
@@ -156,33 +176,53 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
   &lt;&lt;set $farmPlots = Array.from({length: 9}, () =&gt; ({
     status: &quot;wild&quot;
   }))&gt;&gt;
+  
+  /* UI */
+  &lt;&lt;set $farmObjectSelected = null&gt;&gt;
 &lt;/div&gt;
-&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="3" name="Farm" tags="" position="350,100" size="100,100">&lt;&lt;nobr&gt;&gt;
-  &lt;h1&gt;On the Farm&lt;/h1&gt;
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="4" name="StoryInit" tags="" position="475,100" size="100,100">&lt;&lt;nobr&gt;&gt;
+/* Story initialization passage */
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="5" name="Town" tags="" position="600,100" size="100,100">&lt;&lt;nobr&gt;&gt;
+  &lt;h1&gt;In the Town&lt;/h1&gt;
   &lt;div id=&quot;header&quot;&gt;
     &lt;&lt;resourceBar&gt;&gt;
   &lt;/div&gt;
   /* &lt;div id=&quot;setting-image&quot;/&gt; */
-  &lt;&lt;displayFarmMapSketch&gt;&gt;
   &lt;div id=&quot;context&quot;&gt;
-    &lt;p&gt;You stand in the middle of your &lt;&lt;farmDescShort&gt;&gt;. The sun is shining, and the birds are singing. What would you like to do?&lt;/p&gt;
+    &lt;p&gt;You&#39;re in the local town. There&#39;s hustle and bustle as people go about their day. What would you like to do?&lt;/p&gt;
   &lt;/div&gt;
   &lt;div id=&quot;actions&quot;&gt;
-    &#39;&#39;Money:&#39;&#39; &lt;&lt;do&gt;&gt;$money&lt;&lt;/do&gt;&gt;&lt;br /&gt;
-&lt;&lt;link &quot;Update money display&quot;&gt;&gt;
-	&lt;&lt;set $money += 10&gt;&gt;
-	&lt;&lt;redo&gt;&gt;
-&lt;&lt;/link&gt;&gt;
+    &lt;&lt;link &quot;Look for workers to hire&quot; &quot;Town Hire Workers&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;br /&gt;
+    &lt;&lt;link &quot;Go back to the farm&quot; &quot;Farm&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;br /&gt;
   &lt;/div&gt;
-&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="4" name="StoryInit" tags="" position="475,100" size="100,100">&lt;&lt;nobr&gt;&gt;
-/* Story initialization passage */
-&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="5" name="Widgets - Content" tags="widget" position="600,100" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="6" name="Town Hire Workers" tags="" position="725,100" size="100,100">&lt;&lt;nobr&gt;&gt;
+  &lt;h1&gt;Hiring Workers&lt;/h1&gt;
+  &lt;div id=&quot;header&quot;&gt;
+    &lt;&lt;resourceBar&gt;&gt;
+  &lt;/div&gt;
+  /* &lt;div id=&quot;setting-image&quot;/&gt; */
+  &lt;div id=&quot;context&quot;&gt;
+    &lt;p&gt;You approach a group of townsfolk looking for work.&lt;/p&gt;
+  &lt;/div&gt;
+  &lt;div id=&quot;actions&quot;&gt;
+    &lt;&lt;if $money &gt;= 20&gt;&gt;
+      &lt;&lt;link &quot;Hire a worker ($20)&quot; &quot;Town Hire Workers&quot;&gt;&gt;
+        &lt;&lt;set $money -= 20&gt;&gt;
+        &lt;&lt;set $workers += 1&gt;&gt;
+      &lt;&lt;/link&gt;&gt;&lt;br /&gt;
+
+      &lt;&lt;link &quot;Back to town&quot; &quot;Town&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
+    &lt;&lt;else&gt;&gt;
+      &lt;p&gt;You don&#39;t have enough money to hire a worker.&lt;/p&gt;
+      &lt;&lt;link &quot;Return to town&quot; &quot;Town&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
+    &lt;&lt;/if&gt;&gt;
+  &lt;/div&gt;
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="7" name="Widgets - Content" tags="widget" position="850,100" size="100,100">&lt;&lt;nobr&gt;&gt;
 &lt;&lt;debug_infoLog &quot;content widgets loading&quot;&gt;&gt;
 &lt;&lt;widget &quot;farmDescShort&quot;&gt;&gt;
   &lt;&lt;if $farmBuildings.length == 0 &amp;&amp; $farmPlots.every(plot =&gt; plot.status === &quot;wild&quot;)&gt;&gt;\
     empty land\
-  &lt;&lt;elseif $farmBuildings.includes(&quot;house&quot;) &amp;&amp; \
-    ($farmBuildings.length &gt; 1 || $farmPlots.some(plot =&gt; plot.status !== &quot;wild&quot;))&gt;&gt;\
+  &lt;&lt;elseif $farmBuildings.includes(&quot;house&quot;) &amp;&amp; ($farmBuildings.length &gt; 1 || $farmPlots.some(plot =&gt; plot.status !== &quot;wild&quot;))&gt;&gt;\
     thriving farm\
   &lt;&lt;elseif $farmBuildings.includes(&quot;house&quot;)&gt;&gt;\
     home\
@@ -191,71 +231,107 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
   &lt;&lt;/if&gt;&gt;\
 &lt;&lt;/widget&gt;&gt;
 &lt;&lt;debug_infoLog &quot;content widgets loaded&quot;&gt;&gt;
-&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="6" name="Widgets - Map" tags="widget" position="725,100" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="8" name="Widgets - FarmBuilds" tags="widget" position="975,100" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;&lt;debug_infoLog &quot;farm builds widgets loading&quot;&gt;&gt;
+&lt;&lt;widget &quot;farm_optionToBuildHouse&quot;&gt;&gt;
+  &lt;&lt;if !$farmBuildings.includes(&quot;house&quot;) &amp;&amp; $money &gt;= 50 &amp;&amp; $workers &gt;= 1&gt;&gt;
+      &lt;&lt;link &quot;Build a house ($50)&quot;&gt;&gt;
+        &lt;&lt;set $money -= 50&gt;&gt;
+        &lt;&lt;set $farmBuildings.push(&quot;house&quot;)&gt;&gt;
+        &lt;&lt;set $farmPlots[6].building = &quot;house&quot;&gt;&gt;
+
+        &lt;&lt;goto &quot;Farm&quot;&gt;&gt;
+      &lt;&lt;/link&gt;&gt;&lt;br /&gt;
+    &lt;&lt;elseif !$farmBuildings.includes(&quot;house&quot;)&gt;&gt;
+      You need at least 1 worker and $50 to build a house.&lt;br /&gt;
+    &lt;&lt;/if&gt;&gt;
+&lt;&lt;/widget&gt;&gt;
+&lt;&lt;debug_infoLog &quot;farm builds widgets loaded&quot;&gt;&gt;
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="9" name="Widgets - Map" tags="widget" position="1100,100" size="100,100">&lt;&lt;nobr&gt;&gt;
 &lt;&lt;debug_infoLog &quot;map widgets loading&quot;&gt;&gt;
 &lt;&lt;widget &quot;displayFarmMapSketch&quot;&gt;&gt;
-&lt;&lt;set _map = &quot;&quot;&gt;&gt;
-&lt;&lt;set _plotChars = {
-  wild: &quot;🌾&quot;,
-  planted: &quot;🌱&quot;,
-  growing: &quot;🌿&quot;,
-  mature: &quot;🌻&quot;
+/* Configuration constants */
+&lt;&lt;set _PLOT_SIZE = 10&gt;&gt;
+&lt;&lt;set _GRID_SIZE = 3&gt;&gt;
+&lt;&lt;set _BUILDING_START = 3&gt;&gt;
+&lt;&lt;set _BUILDING_END = 6&gt;&gt;
+&lt;&lt;set _CANAL_WIDTH = 3&gt;&gt;
+
+/* Visual elements */
+&lt;&lt;set _CHARS = {
+  wall: &quot;🧱&quot;,
+  water: &quot;💧&quot;,
+  road_right: &quot;➡️&quot;,
+  road_left: &quot;⬅️&quot;,
+  building: &quot;🏠&quot;
 }&gt;&gt;
 
-/* Build the map */
-&lt;&lt;set _map += &quot;🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱💧💧💧\n&quot;&gt;&gt;
+&lt;&lt;set _plotChars = {
+  wild: &quot;🍃&quot;,
+  unplanted: &quot;🟫&quot;,
+  planted: &quot;🌱&quot;,
+  growing: &quot;🌿&quot;,
+  mature: &quot;🌾&quot;
+}&gt;&gt;
 
-/* Render 3 rows of plots */
-&lt;&lt;for _row = 0; _row &lt; 3; _row++&gt;&gt;
-  /* Render 10 lines for this row of plots */
-  &lt;&lt;for _line = 0; _line &lt; 10; _line++&gt;&gt;
-    &lt;&lt;set _rowText = &quot;🧱&quot;&gt;&gt;
-    /* Render 3 columns */
-    &lt;&lt;for _col = 0; _col &lt; 3; _col++&gt;&gt;
-      &lt;&lt;set _plotIdx = _row * 3 + _col&gt;&gt;
+/* Pre-rendered static elements */
+&lt;&lt;set _borderWallCount = (_PLOT_SIZE + 1) * _GRID_SIZE + 1&gt;&gt;
+&lt;&lt;set _borderRow = _CHARS.wall.repeat(_borderWallCount) + _CHARS.water.repeat(_CANAL_WIDTH) + &quot;\n&quot;&gt;&gt;
+&lt;&lt;set _leftWall = _CHARS.wall&gt;&gt;
+&lt;&lt;set _rightWall = _CHARS.wall&gt;&gt;
+&lt;&lt;set _canalSection = _CHARS.water.repeat(_CANAL_WIDTH)&gt;&gt;
+&lt;&lt;set _roadWidth = (_PLOT_SIZE + 1) * _GRID_SIZE + 1 + _CANAL_WIDTH&gt;&gt;
+&lt;&lt;set _roadRow1 = _CHARS.road_right.repeat(_roadWidth) + &quot;\n&quot;&gt;&gt;
+&lt;&lt;set _roadRow2 = _CHARS.road_left.repeat(_roadWidth) + &quot;\n&quot;&gt;&gt;
+
+/* Build the map */
+&lt;&lt;set _map = _borderRow&gt;&gt;
+
+/* Render grid rows */
+&lt;&lt;for _row = 0; _row &lt; _GRID_SIZE; _row++&gt;&gt;
+  /* Render lines within this row of plots */
+  &lt;&lt;for _line = 0; _line &lt; _PLOT_SIZE; _line++&gt;&gt;
+    &lt;&lt;set _rowText = _leftWall&gt;&gt;
+    
+    /* Render grid columns */
+    &lt;&lt;for _col = 0; _col &lt; _GRID_SIZE; _col++&gt;&gt;
+      &lt;&lt;set _plotIdx = _row * _GRID_SIZE + _col&gt;&gt;
       &lt;&lt;set _plot = $farmPlots[_plotIdx]&gt;&gt;
       &lt;&lt;set _char = _plotChars[_plot.status] || &quot;·&quot;&gt;&gt;
       &lt;&lt;set _hasBuilding = _plot.building !== undefined&gt;&gt;
-      /* Render this plot&#39;s line */
-      &lt;&lt;for _j = 0; _j &lt; 10; _j++&gt;&gt;
-        &lt;&lt;if _hasBuilding &amp;&amp; _line &gt;= 3 &amp;&amp; _line &lt;= 6 &amp;&amp; _j &gt;= 3 &amp;&amp; _j &lt;= 6&gt;&gt;
-          /* Building in center (4x4 area) */
-          &lt;&lt;if _line === 3 || _line === 6&gt;&gt;
-            &lt;&lt;set _rowText += &quot;🧱&quot;&gt;&gt;
-          &lt;&lt;else&gt;&gt;
-            &lt;&lt;if _j === 3 || _j === 6&gt;&gt;
-              &lt;&lt;set _rowText += &quot;🧱&quot;&gt;&gt;
-            &lt;&lt;else&gt;&gt;
-              &lt;&lt;set _rowText += &quot;🏠&quot;&gt;&gt;
-            &lt;&lt;/if&gt;&gt;
-          &lt;&lt;/if&gt;&gt;
+      
+      /* Render each character position in this plot */
+      &lt;&lt;for _j = 0; _j &lt; _PLOT_SIZE; _j++&gt;&gt;
+        &lt;&lt;if _hasBuilding &amp;&amp; _line &gt;= _BUILDING_START &amp;&amp; _line &lt;= _BUILDING_END &amp;&amp; _j &gt;= _BUILDING_START &amp;&amp; _j &lt;= _BUILDING_END&gt;&gt;
+          &lt;&lt;set _rowText += _CHARS.building&gt;&gt;
         &lt;&lt;else&gt;&gt;
           &lt;&lt;set _rowText += _char&gt;&gt;
         &lt;&lt;/if&gt;&gt;
       &lt;&lt;/for&gt;&gt;
-      &lt;&lt;set _rowText += &quot;🧱&quot;&gt;&gt;
+      &lt;&lt;set _rowText += _rightWall&gt;&gt;
     &lt;&lt;/for&gt;&gt;
-    /* Add canal on the right for all rows */
-    &lt;&lt;set _rowText += &quot;💧💧💧&quot;&gt;&gt;
-
-    &lt;&lt;set _map += _rowText + &quot;\n&quot;&gt;&gt;
+    
+    /* Add canal on the right */
+    &lt;&lt;set _rowText += _canalSection + &quot;\n&quot;&gt;&gt;
+    &lt;&lt;set _map += _rowText&gt;&gt;
   &lt;&lt;/for&gt;&gt;
-  /* Add divider or bottom border */
-  &lt;&lt;set _map += &quot;🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱💧💧💧\n&quot;&gt;&gt;
+  
+  /* Add border between rows */
+  &lt;&lt;set _map += _borderRow&gt;&gt;
 &lt;&lt;/for&gt;&gt;
 
 /* Add road at the bottom */
-&lt;&lt;set _map += &quot;➡️➡️➡️➡️➡️➡️➡️➡️➡️➡️➡️➡️➡️➡️➡️➡️➡️➡️➡️➡️➡️➡️➡️➡️➡️➡️➡️➡️➡️➡️➡️➡️➡️➡️➡️➡️➡️\n&quot;&gt;&gt;
-&lt;&lt;set _map += &quot;⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️\n&quot;&gt;&gt;
+&lt;&lt;set _map += _roadRow1&gt;&gt;
+&lt;&lt;set _map += _roadRow2&gt;&gt;
 
 /* Display the map in a monospace font */
 &lt;pre style=&quot;line-height: 1.2; font-size: 14px; font-family: &#39;Noto Sans Mono&#39;, monospace;&quot;&gt;_map&lt;/pre&gt;
 &lt;&lt;/widget&gt;&gt;
 &lt;&lt;debug_infoLog &quot;map widgets loaded&quot;&gt;&gt;
-&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="7" name="Widgets - Style" tags="widget" position="850,100" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="10" name="Widgets - Style" tags="widget" position="1225,100" size="100,100">&lt;&lt;nobr&gt;&gt;
 &lt;&lt;debug_infoLog &quot;style widgets loading&quot;&gt;&gt;
 &lt;&lt;widget &quot;resourceBar&quot;&gt;&gt;
-  &lt;span&gt;&#39;&#39;Money&#39;&#39; &lt;&lt;do tag &quot;money&quot;&gt;&gt;$money&lt;&lt;/do&gt;&gt;&lt;/span&gt; | &lt;span&gt;&#39;&#39;Workers&#39;&#39; &lt;&lt;do tag &quot;workers&quot;&gt;&gt;$workers&lt;&lt;/do&gt;&gt;&lt;/span&gt;
+  &lt;span&gt;&#39;&#39;Money&#39;&#39; $$$money&lt;/span&gt; | &lt;span&gt;&#39;&#39;Workers&#39;&#39; $workers&lt;/span&gt;
 &lt;&lt;/widget&gt;&gt;
 &lt;&lt;debug_infoLog &quot;style widgets loaded&quot;&gt;&gt;
 &lt;&lt;/nobr&gt;&gt;</tw-passagedata></tw-storydata>

@@ -1,0 +1,18 @@
+:: Widgets - FarmBuilds [widget]
+<<nobr>>
+<<debug_infoLog "farm builds widgets loading">>
+<<widget "farm_optionToBuildHouse">>
+  <<if !$farmBuildings.includes("house") && $money >= 50 && $workers >= 1>>
+      <<link "Build a house ($50)">>
+        <<set $money -= 50>>
+        <<set $farmBuildings.push("house")>>
+        <<set $farmPlots[6].building = "house">>
+
+        <<goto "Farm">>
+      <</link>><br />
+    <<elseif !$farmBuildings.includes("house")>>
+      You need at least 1 worker and $50 to build a house.<br />
+    <</if>>
+<</widget>>
+<<debug_infoLog "farm builds widgets loaded">>
+<</nobr>>

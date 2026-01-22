@@ -1,0 +1,22 @@
+:: Farm
+<<nobr>>
+  <h1>On the Farm</h1>
+  <div id="header">
+    <<resourceBar>>
+  </div>
+  /* <div id="setting-image"/> */
+  <<displayFarmMapSketch>>
+  <div id="context">
+    <p>You stand in the middle of your <<farmDescShort>>. The sun is shining, and the birds are singing. What would you like to do?</p>
+  </div>
+  <div id="actions">
+    ''Money:'' <<do>>$money<</do>><br />
+    <<link "DEBUG: Get more money (+$10)" "Farm">>
+      <<set $money += 10>>
+    <</link>><br />
+
+    <<farm_optionToBuildHouse>>
+
+    <<link "Go to town" "Town">><</link>><br />
+  </div>
+<</nobr>>

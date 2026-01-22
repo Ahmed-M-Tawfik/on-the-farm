@@ -25,7 +25,7 @@ jobs:
       - name: Build Twine SugarCube game
         run: |
           mkdir dist
-          tweego src js/init js/control js/game js/ui assets -o dist/index.html
+          tweego src assets -o dist/index.html
           cp -r assets dist/
 
       - name: Push to deployment branch

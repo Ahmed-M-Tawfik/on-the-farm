@@ -4,8 +4,7 @@
 <<widget "farmDescShort">>
   <<if $farmBuildings.length == 0 && $farmPlots.every(plot => plot.status === "wild")>>\
     empty land\
-  <<elseif $farmBuildings.includes("house") && \
-    ($farmBuildings.length > 1 || $farmPlots.some(plot => plot.status !== "wild"))>>\
+  <<elseif $farmBuildings.includes("house") && ($farmBuildings.length > 1 || $farmPlots.some(plot => plot.status !== "wild"))>>\
     thriving farm\
   <<elseif $farmBuildings.includes("house")>>\
     home\
