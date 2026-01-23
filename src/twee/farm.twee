@@ -1,22 +1,57 @@
 :: Farm
 <<nobr>>
-  <h1>On the Farm</h1>
+  <h1>On the Farm - Day $dayCounter (<<= $dayPhase.toUpperFirst()>>)</h1>
   <div id="header">
     <<resourceBar>>
   </div>
-  /* <div id="setting-image"/> */
   <<displayFarmMapSketch>>
+  
   <div id="context">
-    <p>You stand in the middle of your <<farmDescShort>>. The sun is shining, and the birds are singing. What would you like to do?</p>
+    <<if setup.isMorning()>>
+      <<morningPhaseContent>>
+    <<else>>
+      <<eveningPhaseContent>>
+    <</if>>
   </div>
+  
   <div id="actions">
-    ''Money:'' <<do>>$money<</do>><br />
-    <<link "DEBUG: Get more money (+$10)" "Farm">>
-      <<set $money += 10>>
-    <</link>><br />
-
-    <<farm_optionToBuildHouse>>
-
-    <<link "Go to town" "Town">><</link>><br />
+    <<if setup.isMorning()>>
+      <<morningPhaseActions>>
+    <<else>>
+      <<eveningPhaseActions>>
+    <</if>>
   </div>
+<</nobr>>
+
+:: Farm Widgets [widget]
+<<nobr>>
+<<widget "morningPhaseContent">>
+  <p>The sun is rising, and the morning air is fresh. Time to plan your day and make assignments.</p>
+  <p><em>Assignment Phase: This is when you'll assign tasks to workers and plan your activities.</em></p>
+<</widget>>
+
+<<widget "morningPhaseActions">>
+  <<link "DEBUG: Get more money (+$10)" "Farm">>
+    <<set $money += 10>>
+  <</link>><br />
+  <<farm_optionToBuildHouse>>
+  <<link "Go to town" "Town">><</link>><br />
+  <hr>
+  <<button "End Day (Go to Evening)" "Farm">>
+    <<run setup.toThisEvening()>>
+  <</button>>
+<</widget>>
+
+<<widget "eveningPhaseContent">>
+  <p>The sun is setting. Time to review the day's work and see what was accomplished.</p>
+  <p><em>Results Evaluation Phase: This is when you'll see the results of the day's assignments.</em></p>
+<</widget>>
+
+<<widget "eveningPhaseActions">>
+  <p>The day is done. Review your progress and prepare for tomorrow.</p>
+  <hr>
+  <<button "Next Day (Go to Morning)" "Farm">>
+    <<run setup.toNextMorning()>>
+  <</button>>
+<</widget>>
 <</nobr>>

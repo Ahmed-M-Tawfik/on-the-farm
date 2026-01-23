@@ -7,8 +7,57 @@
 }
 
 :: StoryInit
+<<script>>
+// Constants for game phases
+setup.PHASES = Object.freeze({
+  MORNING: "morning",
+  EVENING: "evening"
+});
+
+// Day phase functions
+setup.isMorning = function() {
+  return State.variables.dayPhase === setup.PHASES.MORNING;
+};
+
+setup.isEvening = function() {
+  return State.variables.dayPhase === setup.PHASES.EVENING;
+};
+
+setup.toNextMorning = function() {
+  State.variables.dayCounter += 1;
+  State.variables.dayPhase = setup.PHASES.MORNING;
+};
+
+setup.toThisEvening = function() {
+  State.variables.dayPhase = setup.PHASES.EVENING;
+};
+
+setup.nextDayPhase = function() {
+  if (setup.isMorning()) {
+    setup.toThisEvening();
+  } else {
+    setup.toNextMorning();
+  }
+};
+<</script>>
+
 <<nobr>>
-/* Story initialization passage */
+  /* resources */
+  <<set $money = 100>>
+  <<set $workers = 0>>
+
+  /* farm objects */
+  <<set $farmBuildings = []>>
+  <<set $farmPlots = Array.from({length: 9}, () => ({
+    status: "wild"
+  }))>>
+  
+  /* time tracking */
+  <<set $dayCounter = 1>>
+  <<set $dayPhase = setup.PHASES.MORNING>> /* "morning" or "evening" */
+  
+  /* UI */
+  <<set $farmObjectSelected = null>>
 <</nobr>>
 
 :: StoryTitle

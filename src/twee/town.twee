@@ -6,11 +6,15 @@
   </div>
   /* <div id="setting-image"/> */
   <div id="context">
-    <p>You're in the local town. There's hustle and bustle as people go about their day. What would you like to do?</p>
+    <<if $dayPhase === "morning">>
+      <p>You're in the local town. The morning market is bustling with activity as townsfolk go about their business. What would you like to do?</p>
+    <<else>>
+      <p>The town is winding down for the evening. Shops are closing, and people are heading home. What would you like to do before night falls?</p>
+    <</if>>
   </div>
   <div id="actions">
-    <<link "Look for workers to hire" "Town Hire Workers">><</link>><br />
-    <<link "Go back to the farm" "Farm">><</link>><br />
+    <<link "Look for workers to hire" "Town Hire Workers">><</link>><br /><br />
+    <<button "Go back to the farm" "Farm">><</button>>
   </div>
 <</nobr>>
 
@@ -29,12 +33,12 @@
       <<link "Hire a worker ($20)" "Town Hire Workers">>
         <<set $money -= 20>>
         <<set $workers += 1>>
-      <</link>><br />
+      <</link>><br /><br />
 
-      <<link "Back to town" "Town">><</link>>
+      <<button "Back to town" "Town">><</button>>
     <<else>>
       <p>You don't have enough money to hire a worker.</p>
-      <<link "Return to town" "Town">><</link>>
+      <<button "Return to town" "Town">><</button>>
     <</if>>
   </div>
 <</nobr>>

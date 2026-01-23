@@ -12,3 +12,11 @@ sugarcube-2:
       name: displayFarmMapSketch
     farm_optionToBuildHouse:
       name: farm_optionToBuildHouse
+    morningPhaseContent:
+      name: morningPhaseContent
+    eveningPhaseContent:
+      name: eveningPhaseContent
+    morningPhaseActions:
+      name: morningPhaseActions
+    eveningPhaseActions:
+      name: eveningPhaseActions

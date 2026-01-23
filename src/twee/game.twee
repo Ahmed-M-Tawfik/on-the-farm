@@ -9,19 +9,5 @@
   <<button "Get started!">>
     <<goto "Farm">>
   <</button>>
-
-  /* SETUP */
-  /* resources */
-  <<set $money = 100>>
-  <<set $workers = 0>>
-
-  /* farm objects */
-  <<set $farmBuildings = []>>
-  <<set $farmPlots = Array.from({length: 9}, () => ({
-    status: "wild"
-  }))>>
-  
-  /* UI */
-  <<set $farmObjectSelected = null>>
 </div>
 <</nobr>>
