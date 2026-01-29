@@ -136,14 +136,14 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
   console.log(&quot;debug widgets loaded&quot;);
 &lt;&lt;/script&gt;&gt;
 &lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="2" name="Farm" tags="" position="225,100" size="100,100">&lt;&lt;nobr&gt;&gt;
-  &lt;h1&gt;On the Farm - Day $dayCounter (&lt;&lt;= $dayPhase.toUpperFirst()&gt;&gt;)&lt;/h1&gt;
+  &lt;h1&gt;On the Farm - Day $time.dayCounter (&lt;&lt;= $time.dayPhase.toUpperFirst()&gt;&gt;)&lt;/h1&gt;
   &lt;div id=&quot;header&quot;&gt;
     &lt;&lt;resourceBar&gt;&gt;
   &lt;/div&gt;
   &lt;&lt;displayFarmMapSketch&gt;&gt;
   
   &lt;div id=&quot;context&quot;&gt;
-    &lt;&lt;if setup.isMorning()&gt;&gt;
+    &lt;&lt;if setup.time.isMorning()&gt;&gt;
       &lt;&lt;morningPhaseContent&gt;&gt;
     &lt;&lt;else&gt;&gt;
       &lt;&lt;eveningPhaseContent&gt;&gt;
@@ -151,7 +151,7 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
   &lt;/div&gt;
   
   &lt;div id=&quot;actions&quot;&gt;
-    &lt;&lt;if setup.isMorning()&gt;&gt;
+    &lt;&lt;if setup.time.isMorning()&gt;&gt;
       &lt;&lt;morningPhaseActions&gt;&gt;
     &lt;&lt;else&gt;&gt;
       &lt;&lt;eveningPhaseActions&gt;&gt;
@@ -171,7 +171,8 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
   &lt;&lt;link &quot;Go to town&quot; &quot;Town&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;br /&gt;
   &lt;hr&gt;
   &lt;&lt;button &quot;End Day (Go to Evening)&quot; &quot;Farm&quot;&gt;&gt;
-    &lt;&lt;run setup.toThisEvening()&gt;&gt;
+    &lt;&lt;run setup.activity.processBackgroundActivities()&gt;&gt;
+    &lt;&lt;run setup.time.toThisEvening()&gt;&gt;
   &lt;&lt;/button&gt;&gt;
 &lt;&lt;/widget&gt;&gt;
 
@@ -184,7 +185,7 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
   &lt;p&gt;The day is done. Review your progress and prepare for tomorrow.&lt;/p&gt;
   &lt;hr&gt;
   &lt;&lt;button &quot;Next Day (Go to Morning)&quot; &quot;Farm&quot;&gt;&gt;
-    &lt;&lt;run setup.toNextMorning()&gt;&gt;
+    &lt;&lt;run setup.time.toNextMorning()&gt;&gt;
   &lt;&lt;/button&gt;&gt;
 &lt;&lt;/widget&gt;&gt;
 &lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="4" name="Start" tags="" position="475,100" size="100,100">&lt;&lt;nobr&gt;&gt;
@@ -198,54 +199,180 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
     &lt;&lt;goto &quot;Farm&quot;&gt;&gt;
   &lt;&lt;/button&gt;&gt;
 &lt;/div&gt;
-&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="5" name="StoryInit" tags="" position="600,100" size="100,100">&lt;&lt;script&gt;&gt;
+&lt;&lt;/nobr&gt;&gt;</tw-passagedata><tw-passagedata pid="5" name="StoryInit" tags="" position="600,100" size="100,100">/* TIME */
+&lt;&lt;script&gt;&gt;
 // Constants for game phases
-setup.PHASES = Object.freeze({
+setup.time = {};
+setup.time.PHASES = Object.freeze({
   MORNING: &quot;morning&quot;,
   EVENING: &quot;evening&quot;
 });
 
 // Day phase functions
-setup.isMorning = function() {
-  return State.variables.dayPhase === setup.PHASES.MORNING;
+setup.time.isMorning = function() {
+  return State.variables.time.dayPhase === setup.time.PHASES.MORNING;
 };
 
-setup.isEvening = function() {
-  return State.variables.dayPhase === setup.PHASES.EVENING;
+setup.time.isEvening = function() {
+  return State.variables.time.dayPhase === setup.time.PHASES.EVENING;
 };
 
-setup.toNextMorning = function() {
-  State.variables.dayCounter += 1;
-  State.variables.dayPhase = setup.PHASES.MORNING;
+setup.time.toNextMorning = function() {
+  State.variables.time.dayCounter += 1;
+  State.variables.time.dayPhase = setup.time.PHASES.MORNING;
 };
 
-setup.toThisEvening = function() {
-  State.variables.dayPhase = setup.PHASES.EVENING;
+setup.time.toThisEvening = function() {
+  console.log(&quot;asdasds&quot;);
+  State.variables.time.dayPhase = setup.time.PHASES.EVENING;
 };
 
-setup.nextDayPhase = function() {
-  if (setup.isMorning()) {
-    setup.toThisEvening();
+setup.time.nextDayPhase = function() {
+  if (setup.time.isMorning()) {
+    setup.time.toThisEvening();
   } else {
-    setup.toNextMorning();
+    setup.time.toNextMorning();
+  }
+};
+&lt;&lt;/script&gt;&gt;
+
+&lt;&lt;script&gt;&gt;
+setup.farm = {}
+setup.farm.PLOT_STATE = Object.freeze({
+  WILD: &quot;wild&quot;,
+  CLEARED: &quot;cleared&quot;,
+  PLANTED: &quot;planted&quot;,
+  GROWING: &quot;growing&quot;,
+  MATURE: &quot;mature&quot;,
+  ROTTEN: &quot;rotten&quot;
+});
+
+&lt;&lt;/script&gt;&gt;
+
+/* ACTIVITIES */
+&lt;&lt;script&gt;&gt;
+setup.activity = {};
+// bg activities are activities that run invisibly to the player, but have effects on game state
+// these activities are stateless - data is stored in the objects they affect
+setup.activity.backgroundActivities = Object.freeze({
+  PLOT_WILDING: {
+    id: &quot;bg_plot_wilding&quot;,
+    category: &quot;farm_plot&quot;,
+    shouldStart: (plot) =&gt; plot.status !== setup.farm.PLOT_STATE.WILD &amp;&amp; plot.building === null, // for now, only farming plots can go wild
+    shouldCancel: (plot) =&gt; plot.building !== null, // abort wilding if a building is constructed in the plot
+    shouldEnd: (plot) =&gt; plot.status === setup.farm.PLOT_STATE.WILD || plot.wildness &gt;= 100, // ends when fully wild
+    
+    progressAction: (plot) =&gt; {
+      plot.wildness += 10; // increase wildness by 10 each day
+      plot.wildness = Math.min(plot.wildness, 100);
+      console.log(&quot;progressing wilding&quot;, plot.id, plot.wildness, plot.status);
+    },
+    endAction: (plot) =&gt; {
+      plot.status = setup.farm.PLOT_STATE.WILD;
+      plot.cropAge = 0;
+      console.log(&quot;ending wilding&quot;, plot.id, plot.wildness, plot.status);
+    },
+  },
+  PLOT_CROP_GROWTH: {
+    id: &quot;bg_plot_crop_growth&quot;,
+    category: &quot;farm_plot&quot;,
+    // progress: grow crops from planted, through growing and mature, to rotten
+    shouldStart: (plot) =&gt; plot.status !== setup.farm.PLOT_STATE.WILD &amp;&amp; plot.status !== setup.farm.PLOT_STATE.CLEARED &amp;&amp; plot.building === null,
+    shouldCancel: (plot) =&gt; plot.status === setup.farm.PLOT_STATE.WILD || plot.status === setup.farm.PLOT_STATE.CLEARED || plot.building !== null,
+    shouldEnd: (plot) =&gt; plot.cropAge &gt;= 2000,
+
+    progressAction: (plot) =&gt; {
+      // increase crop growth by 20 each day todo: adjust rate based on crop type and other factors
+      plot.cropAge += 20;
+      plot.cropAge = Math.min(plot.cropAge, 2000);
+
+      if(plot.cropAge &gt;= 1200) {
+        plot.status = setup.farm.PLOT_STATE.ROTTEN; // crops have overmatured and are now rotten
+      } else if(plot.cropAge &gt;= 1000) {
+        plot.status = setup.farm.PLOT_STATE.MATURE; // crops are mature and ready for harvest
+      } else if(plot.cropAge &gt;= 100) {
+        plot.status = setup.farm.PLOT_STATE.GROWING; // crops are growing and visible on the plot
+      }
+    },
+    endAction: (plot) =&gt; {
+      // we only reach here if cropAge &gt;= 2000
+      // auto-clear the plot once crops have fully rotted
+      plot.status = setup.farm.PLOT_STATE.CLEARED;
+      plot.cropAge = 0;
+    },
+  },
+});
+
+// end-of-morning processing of background activities
+setup.activity.processBackgroundActivities = function() {
+  const removeActivity = (plot, activityId) =&gt; {
+    plot.activeActivities = plot.activeActivities.filter(id =&gt; id !== activityId);
+  };
+
+  for (const activityKey in setup.activity.backgroundActivities) {
+    const activity = setup.activity.backgroundActivities[activityKey];
+
+    // plot-based activity
+    if(activity.category === &quot;farm_plot&quot;) {
+      State.variables.farmPlots.forEach(plot =&gt; {
+
+        // Check if activity should start
+        if (!plot.activeActivities.includes(activity.id) &amp;&amp; activity.shouldStart(plot)) {
+          plot.activeActivities.push(activity.id);
+          activity.startAction?.(plot);
+        }
+
+        // Check if activity should progress or end
+        if (plot.activeActivities.includes(activity.id)) {
+
+          // Check if activity should be cancelled
+          if (activity.shouldCancel(plot)) {
+            activity.cancelAction?.(plot);
+            removeActivity(plot, activity.id);
+
+          // Check if activity should end
+          } else if (activity.shouldEnd(plot)) {
+            activity.endAction?.(plot);
+            removeActivity(plot, activity.id);
+          
+          // Otherwise, progress the activity
+          } else {
+            activity.progressAction(plot);
+          }
+        }
+      });
+    }
   }
 };
 &lt;&lt;/script&gt;&gt;
 
 &lt;&lt;nobr&gt;&gt;
-  /* resources */
+  /*** VARIABLE VALUES - don&#39;t place static &#39;data&#39; here, use `setup` ***/
+  /* RESOURCES */
   &lt;&lt;set $money = 100&gt;&gt;
   &lt;&lt;set $workers = 0&gt;&gt;
 
-  /* farm objects */
+  /* FARM */
   &lt;&lt;set $farmBuildings = []&gt;&gt;
-  &lt;&lt;set $farmPlots = Array.from({length: 9}, () =&gt; ({
-    status: &quot;wild&quot;
+  &lt;&lt;set $farmPlots = Array.from({length: 9}, (_, i) =&gt; ({
+    id: i,
+    status: setup.farm.PLOT_STATE.WILD,
+    wildness: 100,
+    cropAge: 0,
+    building: null,
+    activeActivities: []
   }))&gt;&gt;
+  /* For testing: */
+  &lt;&lt;run $farmPlots[0].status = setup.farm.PLOT_STATE.CLEARED&gt;&gt;
+  &lt;&lt;run $farmPlots[0].wildness = 0&gt;&gt;
+  &lt;&lt;run $farmPlots[1].status = setup.farm.PLOT_STATE.PLANTED&gt;&gt;
+  &lt;&lt;run $farmPlots[1].wildness = 0&gt;&gt;
+  &lt;&lt;run $farmPlots[1].cropAge = 80&gt;&gt;
   
-  /* time tracking */
-  &lt;&lt;set $dayCounter = 1&gt;&gt;
-  &lt;&lt;set $dayPhase = setup.PHASES.MORNING&gt;&gt; /* &quot;morning&quot; or &quot;evening&quot; */
+  /* TIME TRACKING */
+  &lt;&lt;set $time = {}&gt;&gt;
+  &lt;&lt;set $time.dayCounter = 1&gt;&gt;
+  &lt;&lt;set $time.dayPhase = setup.time.PHASES.MORNING&gt;&gt; /* &quot;morning&quot; or &quot;evening&quot; */
   
   /* UI */
   &lt;&lt;set $farmObjectSelected = null&gt;&gt;
@@ -256,7 +383,7 @@ setup.nextDayPhase = function() {
   &lt;/div&gt;
   /* &lt;div id=&quot;setting-image&quot;/&gt; */
   &lt;div id=&quot;context&quot;&gt;
-    &lt;&lt;if $dayPhase === &quot;morning&quot;&gt;&gt;
+    &lt;&lt;if $time.dayPhase === &quot;morning&quot;&gt;&gt;
       &lt;p&gt;You&#39;re in the local town. The morning market is bustling with activity as townsfolk go about their business. What would you like to do?&lt;/p&gt;
     &lt;&lt;else&gt;&gt;
       &lt;p&gt;The town is winding down for the evening. Shops are closing, and people are heading home. What would you like to do before night falls?&lt;/p&gt;
@@ -338,11 +465,11 @@ setup.nextDayPhase = function() {
 }&gt;&gt;
 
 &lt;&lt;set _plotChars = {
-  wild: &quot;🍃&quot;,
-  unplanted: &quot;🟫&quot;,
-  planted: &quot;🌱&quot;,
-  growing: &quot;🌿&quot;,
-  mature: &quot;🌾&quot;
+  [setup.farm.PLOT_STATE.WILD]: &quot;🍃&quot;,
+  [setup.farm.PLOT_STATE.CLEARED]: &quot;🟫&quot;,
+  [setup.farm.PLOT_STATE.PLANTED]: &quot;🌱&quot;,
+  [setup.farm.PLOT_STATE.GROWING]: &quot;🌿&quot;,
+  [setup.farm.PLOT_STATE.MATURE]: &quot;🌾&quot;
 }&gt;&gt;
 
 /* Pre-rendered static elements */
@@ -368,8 +495,8 @@ setup.nextDayPhase = function() {
     &lt;&lt;for _col = 0; _col &lt; _GRID_SIZE; _col++&gt;&gt;
       &lt;&lt;set _plotIdx = _row * _GRID_SIZE + _col&gt;&gt;
       &lt;&lt;set _plot = $farmPlots[_plotIdx]&gt;&gt;
-      &lt;&lt;set _char = _plotChars[_plot.status] || &quot;·&quot;&gt;&gt;
-      &lt;&lt;set _hasBuilding = _plot.building !== undefined&gt;&gt;
+      &lt;&lt;set _char = _plotChars[_plot.status] || &quot;··&quot;&gt;&gt;
+      &lt;&lt;set _hasBuilding = _plot.building !== undefined &amp;&amp; _plot.building !== null&gt;&gt;
       
       /* Render each character position in this plot */
       &lt;&lt;for _j = 0; _j &lt; _PLOT_SIZE; _j++&gt;&gt;

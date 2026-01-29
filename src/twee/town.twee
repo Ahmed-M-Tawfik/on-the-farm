@@ -6,7 +6,7 @@
   </div>
   /* <div id="setting-image"/> */
   <div id="context">
-    <<if $dayPhase === "morning">>
+    <<if $time.dayPhase === "morning">>
       <p>You're in the local town. The morning market is bustling with activity as townsfolk go about their business. What would you like to do?</p>
     <<else>>
       <p>The town is winding down for the evening. Shops are closing, and people are heading home. What would you like to do before night falls?</p>

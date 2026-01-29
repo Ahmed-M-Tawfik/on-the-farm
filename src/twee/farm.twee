@@ -1,13 +1,13 @@
 :: Farm
 <<nobr>>
-  <h1>On the Farm - Day $dayCounter (<<= $dayPhase.toUpperFirst()>>)</h1>
+  <h1>On the Farm - Day $time.dayCounter (<<= $time.dayPhase.toUpperFirst()>>)</h1>
   <div id="header">
     <<resourceBar>>
   </div>
   <<displayFarmMapSketch>>
   
   <div id="context">
-    <<if setup.isMorning()>>
+    <<if setup.time.isMorning()>>
       <<morningPhaseContent>>
     <<else>>
       <<eveningPhaseContent>>
@@ -15,7 +15,7 @@
   </div>
   
   <div id="actions">
-    <<if setup.isMorning()>>
+    <<if setup.time.isMorning()>>
       <<morningPhaseActions>>
     <<else>>
       <<eveningPhaseActions>>
@@ -38,7 +38,8 @@
   <<link "Go to town" "Town">><</link>><br />
   <hr>
   <<button "End Day (Go to Evening)" "Farm">>
-    <<run setup.toThisEvening()>>
+    <<run setup.activity.processBackgroundActivities()>>
+    <<run setup.time.toThisEvening()>>
   <</button>>
 <</widget>>
 
@@ -51,7 +52,7 @@
   <p>The day is done. Review your progress and prepare for tomorrow.</p>
   <hr>
   <<button "Next Day (Go to Morning)" "Farm">>
-    <<run setup.toNextMorning()>>
+    <<run setup.time.toNextMorning()>>
   <</button>>
 <</widget>>
 <</nobr>>

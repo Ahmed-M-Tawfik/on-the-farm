@@ -7,54 +7,180 @@
 }
 
 :: StoryInit
+/* TIME */
 <<script>>
 // Constants for game phases
-setup.PHASES = Object.freeze({
+setup.time = {};
+setup.time.PHASES = Object.freeze({
   MORNING: "morning",
   EVENING: "evening"
 });
 
 // Day phase functions
-setup.isMorning = function() {
-  return State.variables.dayPhase === setup.PHASES.MORNING;
+setup.time.isMorning = function() {
+  return State.variables.time.dayPhase === setup.time.PHASES.MORNING;
 };
 
-setup.isEvening = function() {
-  return State.variables.dayPhase === setup.PHASES.EVENING;
+setup.time.isEvening = function() {
+  return State.variables.time.dayPhase === setup.time.PHASES.EVENING;
 };
 
-setup.toNextMorning = function() {
-  State.variables.dayCounter += 1;
-  State.variables.dayPhase = setup.PHASES.MORNING;
+setup.time.toNextMorning = function() {
+  State.variables.time.dayCounter += 1;
+  State.variables.time.dayPhase = setup.time.PHASES.MORNING;
 };
 
-setup.toThisEvening = function() {
-  State.variables.dayPhase = setup.PHASES.EVENING;
+setup.time.toThisEvening = function() {
+  console.log("asdasds");
+  State.variables.time.dayPhase = setup.time.PHASES.EVENING;
 };
 
-setup.nextDayPhase = function() {
-  if (setup.isMorning()) {
-    setup.toThisEvening();
+setup.time.nextDayPhase = function() {
+  if (setup.time.isMorning()) {
+    setup.time.toThisEvening();
   } else {
-    setup.toNextMorning();
+    setup.time.toNextMorning();
+  }
+};
+<</script>>
+
+<<script>>
+setup.farm = {}
+setup.farm.PLOT_STATE = Object.freeze({
+  WILD: "wild",
+  CLEARED: "cleared",
+  PLANTED: "planted",
+  GROWING: "growing",
+  MATURE: "mature",
+  ROTTEN: "rotten"
+});
+
+<</script>>
+
+/* ACTIVITIES */
+<<script>>
+setup.activity = {};
+// bg activities are activities that run invisibly to the player, but have effects on game state
+// these activities are stateless - data is stored in the objects they affect
+setup.activity.backgroundActivities = Object.freeze({
+  PLOT_WILDING: {
+    id: "bg_plot_wilding",
+    category: "farm_plot",
+    shouldStart: (plot) => plot.status !== setup.farm.PLOT_STATE.WILD && plot.building === null, // for now, only farming plots can go wild
+    shouldCancel: (plot) => plot.building !== null, // abort wilding if a building is constructed in the plot
+    shouldEnd: (plot) => plot.status === setup.farm.PLOT_STATE.WILD || plot.wildness >= 100, // ends when fully wild
+    
+    progressAction: (plot) => {
+      plot.wildness += 10; // increase wildness by 10 each day
+      plot.wildness = Math.min(plot.wildness, 100);
+      console.log("progressing wilding", plot.id, plot.wildness, plot.status);
+    },
+    endAction: (plot) => {
+      plot.status = setup.farm.PLOT_STATE.WILD;
+      plot.cropAge = 0;
+      console.log("ending wilding", plot.id, plot.wildness, plot.status);
+    },
+  },
+  PLOT_CROP_GROWTH: {
+    id: "bg_plot_crop_growth",
+    category: "farm_plot",
+    // progress: grow crops from planted, through growing and mature, to rotten
+    shouldStart: (plot) => plot.status !== setup.farm.PLOT_STATE.WILD && plot.status !== setup.farm.PLOT_STATE.CLEARED && plot.building === null,
+    shouldCancel: (plot) => plot.status === setup.farm.PLOT_STATE.WILD || plot.status === setup.farm.PLOT_STATE.CLEARED || plot.building !== null,
+    shouldEnd: (plot) => plot.cropAge >= 2000,
+
+    progressAction: (plot) => {
+      // increase crop growth by 20 each day todo: adjust rate based on crop type and other factors
+      plot.cropAge += 20;
+      plot.cropAge = Math.min(plot.cropAge, 2000);
+
+      if(plot.cropAge >= 1200) {
+        plot.status = setup.farm.PLOT_STATE.ROTTEN; // crops have overmatured and are now rotten
+      } else if(plot.cropAge >= 1000) {
+        plot.status = setup.farm.PLOT_STATE.MATURE; // crops are mature and ready for harvest
+      } else if(plot.cropAge >= 100) {
+        plot.status = setup.farm.PLOT_STATE.GROWING; // crops are growing and visible on the plot
+      }
+    },
+    endAction: (plot) => {
+      // we only reach here if cropAge >= 2000
+      // auto-clear the plot once crops have fully rotted
+      plot.status = setup.farm.PLOT_STATE.CLEARED;
+      plot.cropAge = 0;
+    },
+  },
+});
+
+// end-of-morning processing of background activities
+setup.activity.processBackgroundActivities = function() {
+  const removeActivity = (plot, activityId) => {
+    plot.activeActivities = plot.activeActivities.filter(id => id !== activityId);
+  };
+
+  for (const activityKey in setup.activity.backgroundActivities) {
+    const activity = setup.activity.backgroundActivities[activityKey];
+
+    // plot-based activity
+    if(activity.category === "farm_plot") {
+      State.variables.farmPlots.forEach(plot => {
+
+        // Check if activity should start
+        if (!plot.activeActivities.includes(activity.id) && activity.shouldStart(plot)) {
+          plot.activeActivities.push(activity.id);
+          activity.startAction?.(plot);
+        }
+
+        // Check if activity should progress or end
+        if (plot.activeActivities.includes(activity.id)) {
+
+          // Check if activity should be cancelled
+          if (activity.shouldCancel(plot)) {
+            activity.cancelAction?.(plot);
+            removeActivity(plot, activity.id);
+
+          // Check if activity should end
+          } else if (activity.shouldEnd(plot)) {
+            activity.endAction?.(plot);
+            removeActivity(plot, activity.id);
+          
+          // Otherwise, progress the activity
+          } else {
+            activity.progressAction(plot);
+          }
+        }
+      });
+    }
   }
 };
 <</script>>
 
 <<nobr>>
-  /* resources */
+  /*** VARIABLE VALUES - don't place static 'data' here, use `setup` ***/
+  /* RESOURCES */
   <<set $money = 100>>
   <<set $workers = 0>>
 
-  /* farm objects */
+  /* FARM */
   <<set $farmBuildings = []>>
-  <<set $farmPlots = Array.from({length: 9}, () => ({
-    status: "wild"
+  <<set $farmPlots = Array.from({length: 9}, (_, i) => ({
+    id: i,
+    status: setup.farm.PLOT_STATE.WILD,
+    wildness: 100,
+    cropAge: 0,
+    building: null,
+    activeActivities: []
   }))>>
+  /* For testing: */
+  <<run $farmPlots[0].status = setup.farm.PLOT_STATE.CLEARED>>
+  <<run $farmPlots[0].wildness = 0>>
+  <<run $farmPlots[1].status = setup.farm.PLOT_STATE.PLANTED>>
+  <<run $farmPlots[1].wildness = 0>>
+  <<run $farmPlots[1].cropAge = 80>>
   
-  /* time tracking */
-  <<set $dayCounter = 1>>
-  <<set $dayPhase = setup.PHASES.MORNING>> /* "morning" or "evening" */
+  /* TIME TRACKING */
+  <<set $time = {}>>
+  <<set $time.dayCounter = 1>>
+  <<set $time.dayPhase = setup.time.PHASES.MORNING>> /* "morning" or "evening" */
   
   /* UI */
   <<set $farmObjectSelected = null>>

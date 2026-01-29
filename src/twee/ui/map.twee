@@ -19,11 +19,11 @@
 }>>
 
 <<set _plotChars = {
-  wild: "🍃",
-  unplanted: "🟫",
-  planted: "🌱",
-  growing: "🌿",
-  mature: "🌾"
+  [setup.farm.PLOT_STATE.WILD]: "🍃",
+  [setup.farm.PLOT_STATE.CLEARED]: "🟫",
+  [setup.farm.PLOT_STATE.PLANTED]: "🌱",
+  [setup.farm.PLOT_STATE.GROWING]: "🌿",
+  [setup.farm.PLOT_STATE.MATURE]: "🌾"
 }>>
 
 /* Pre-rendered static elements */
@@ -49,8 +49,8 @@
     <<for _col = 0; _col < _GRID_SIZE; _col++>>
       <<set _plotIdx = _row * _GRID_SIZE + _col>>
       <<set _plot = $farmPlots[_plotIdx]>>
-      <<set _char = _plotChars[_plot.status] || "·">>
-      <<set _hasBuilding = _plot.building !== undefined>>
+      <<set _char = _plotChars[_plot.status] || "··">>
+      <<set _hasBuilding = _plot.building !== undefined && _plot.building !== null>>
       
       /* Render each character position in this plot */
       <<for _j = 0; _j < _PLOT_SIZE; _j++>>
